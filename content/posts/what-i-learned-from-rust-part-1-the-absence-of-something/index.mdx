@@ -1,0 +1,65 @@
+---
+title: What I learned from Rust - Part 1 - The absence of something
+date: 2020-05-28
+tags:
+  - Rust
+  - Programming
+---
+
+
+Lately, I had opportunities of getting my hands dirty with the Rust programming language, and boy, it has been quite a ride. I am from a Java background and Rust made me deconstruct a lot of things that I thought I knew about programming. I’ll share in this series of blog posts some of my learnings of this ongoing journey.
+
+## How to represent the absence of something
+
+The concept of nothing seems like something that we all have deep down in our minds, but if you think about it for some time it’s quite difficult to reason about: it’s the opposite of something for sure, but what do you consider something? You could go and pick an object, or maybe also the air around the object, but hey, what about zero? Zero is a natural number, can a natural number be the opposite of something? Ok, I think you got it, that’s not a simple thing to deliberate about.
+
+In the programming languages context, computer scientists have come up with a lot of ideas to represent emptiness, C descended languages have `null`, but also a function without return has the type void which is also a way of expressing emptiness. JavaScript, being a young brat grandson of C, inherited `null` and also for some reason decided to introduce another representation called `undefined`. This type of incoherence is not the problem of my point, but the derivative of it: these representations don't give programmers the knowledge of when to expect that something (a variable, for example) may not exist, and most of the languages don’t help in any practical way with that.
+
+This leads us to the chaos of `NullPointerException`, `undefined if not a function`, and `Undefined method 'something' for nil:NilClass` to the point of being a recurring joke of its respective programming communities. The fact that no hint is given if an `int` is an `int` leave developers with the crippling uncertainty if it's needed to check for the absence, and honestly, humans when presented with uncertainty usually act like The Sims characters watching its kitchen catching fire. They don't know what to do.
+
+I’ll give an example, let’s say you need to write a function that returns a balance of a bank account of a given user. Using Java, the signature is very straight forward:
+
+```
+public Double get_balance(User user) {
+   // some code here
+}
+```
+
+Some naive developer could assume that every user should have a balance, even zero, this can be a valid assumption because it relies on the intuition about the business, but also ironically dangerous for the exact same reason. Let's say a user can't have a balance calculated because it needs some random compliance document and it's now held at some early open accounting process, so naturally this method returns `null`. As fast as your sprint ends there'll be a Jira ticket for some weird `NullPointerException` because developers simply can't figure it out all alone every possible state a `User` can be.
+
+You may argue that the function could return zero, but this could trick the developer to believe that every user indeed has a valid balance, which we know isn't true. There's also the possibility of raising an exception, but this could lead the programmer to control flow with it [which is an anti-pattern](https://web.archive.org/web/20140430044213/http://c2.com/cgi-bin/wiki?DontUseExceptionsForFlowControl), and further if the language doesn't enforce exception handling we would have the same problem of the clueless possibility of absence.
+
+## But there's an Option
+
+The Rust programming languages solve this issue in a very elegant way: not having a `null` at all. If this sounds dramatic, weird, and scary for you it's ok, I felt that way too. But actually, the language gives you a way better approach to represent absence, it's called the `Option` enum. In Rust, we can code the same function above as following:
+
+```
+fn calculate_balance(user: User) -> Option<f32> {
+    // some code here
+}
+```
+
+This function has a return type of `Option<f32>`, the difference here is that the `Option` is explicitly saying that it may not be possible to return the user's balance, therefore, absent. So now we're signaling the developer using this function that it's crucial to handle the nonexistence of balance. Luckily, Rust gives us a lot of ways to accomplish this, for example, the `match` operator:
+
+```
+match calculate_balance(user) {
+    Some(balance) => println!("Your balance is {:?}", balance),
+    None => println!("Your account is invalid! :("),
+}
+```
+
+So what we're doing here is simply matching (duh!) every return that `calculate_balance` can possibly provide, and don't sweat about it, Rust makes sure that every achievable outcome is implemented at compile-time, and if you need cover more complicated stuff there are [more advanced ways to matching values in Rust](https://doc.rust-lang.org/book/ch18-03-pattern-syntax.html).
+
+But hey, what if the developer doesn't care about the nullability of the balance? Maybe it's impossible to reach this state in the feature that it's calling it, maybe defaulting to `0.0` is fine in that situation, maybe we're reckless punks that don't bother if breaks, etc. Rust is a very strict language, but also gives you some freedom, here are some examples:
+
+```
+calculate_balance(user).unwrap(); // panic if returns None
+calculate_balance(user).or_else(|| Some(0.0)); //defaults to 0.0 if None
+calculate_balance(user).expect("I'm a reckless fearless kid"); // panic with a fun message :)
+```
+
+You may ask: if the program still can crash or defaults, then what's the difference anyway? The difference here is that you're deliberately choosing to not do anything about it, rather than blindly falling into a trap, so Rust always gives you the information but the decision of what to do about it is in the hands entirely of the developer. I think it's obvious but I feel obliged to say that `expect` and `unwrap` should be avoided when possible and used thoughtfully.
+
+## Conclusion
+
+The Rust approach may not be a surprise for a lot of programmers because in fact is a very old concept and implemented natively or with external libraries in [a lot of programming languages](https://en.wikipedia.org/wiki/Option_type#Names_and_definitions). But it's kind of funny to me that something so simple, yet powerful, could avoid an enormous amount of runtime bugs in modern applications. I certainly learned how to write better and safer code with Rust and this will absolutely be reflected at other languages that I'll put my hands on.
