@@ -5,6 +5,23 @@ require(`dotenv`).config({
 module.exports = {
   siteMetadata: {
     siteTitleAlt: `Andrei's Blog`,
+    // Used for the title template on pages other than the index site
+    siteTitle: `Andrei`,
+    // Default title of the page
+    siteTitleAlt: `programming, career and life`,
+    // Can be used for e.g. JSONLD
+    siteHeadline: `programming, career and life`,
+    // Will be used to generate absolute URLs for og:image etc.
+    siteUrl: `https://andreih.com`,
+    // Used for SEO
+    siteDescription: `Andrei's personal blog about programming, career and life`,
+    // Will be set on the <html /> tag
+    siteLanguage: `en`,
+    // Used for og:image and must be placed inside the `static` folder
+    siteImage: `/banner.jpg`,
+    // Twitter Handle
+    author: `@andreih1`,
+    // Links displayed in the header on the right side
   },
   plugins: [
     {

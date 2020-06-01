@@ -6,7 +6,6 @@ tags:
   - Programming
 ---
 
-
 Lately, I had opportunities of getting my hands dirty with the Rust programming language, and boy, it has been quite a ride. I am from a Java background and Rust made me deconstruct a lot of things that I thought I knew about programming. I’ll share in this series of blog posts some of my learnings of this ongoing journey.
 
 ## How to represent the absence of something
@@ -19,7 +18,7 @@ This leads us to the chaos of `NullPointerException`, `undefined if not a functi
 
 I’ll give an example, let’s say you need to write a function that returns a balance of a bank account of a given user. Using Java, the signature is very straight forward:
 
-```
+```java
 public Double get_balance(User user) {
    // some code here
 }
@@ -33,7 +32,7 @@ You may argue that the function could return zero, but this could trick the deve
 
 The Rust programming languages solve this issue in a very elegant way: not having a `null` at all. If this sounds dramatic, weird, and scary for you it's ok, I felt that way too. But actually, the language gives you a way better approach to represent absence, it's called the `Option` enum. In Rust, we can code the same function above as following:
 
-```
+```rust
 fn calculate_balance(user: User) -> Option<f32> {
     // some code here
 }
@@ -41,7 +40,7 @@ fn calculate_balance(user: User) -> Option<f32> {
 
 This function has a return type of `Option<f32>`, the difference here is that the `Option` is explicitly saying that it may not be possible to return the user's balance, therefore, absent. So now we're signaling the developer using this function that it's crucial to handle the nonexistence of balance. Luckily, Rust gives us a lot of ways to accomplish this, for example, the `match` operator:
 
-```
+```rust
 match calculate_balance(user) {
     Some(balance) => println!("Your balance is {:?}", balance),
     None => println!("Your account is invalid! :("),
@@ -52,9 +51,9 @@ So what we're doing here is simply matching (duh!) every return that `calculate_
 
 But hey, what if the developer doesn't care about the nullability of the balance? Maybe it's impossible to reach this state in the feature that it's calling it, maybe defaulting to `0.0` is fine in that situation, maybe we're reckless punks that don't bother if breaks, etc. Rust is a very strict language, but also gives you some freedom, here are some examples:
 
-```
+```rust
 calculate_balance(user).unwrap(); // panic if returns None
-calculate_balance(user).or_else(|| Some(0.0)); //defaults to 0.0 if None
+calculate_balance(user).unwrap_or(0.0); // defaults to 0.0 if None
 calculate_balance(user).expect("I'm a reckless fearless kid"); // panic with a fun message :)
 ```
 
