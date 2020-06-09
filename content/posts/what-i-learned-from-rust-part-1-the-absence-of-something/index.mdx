@@ -8,7 +8,7 @@ tags:
 
 Lately, I had opportunities of getting my hands dirty with the Rust programming language, and boy, it has been quite a ride. I am from a Java background and Rust made me deconstruct a lot of things that I thought I knew about programming. I’ll share in this series of blog posts some of my learnings of this ongoing journey.
 
-## How to represent the absence of something
+### How to represent the absence of something
 
 The concept of nothing seems like something that we all have deep down in our minds, but if you think about it for some time it’s quite difficult to reason about: it’s the opposite of something for sure, but what do you consider something? You could go and pick an object, or maybe also the air around the object, but hey, what about zero? Zero is a natural number, can a natural number be the opposite of something? Ok, I think you got it, that’s not a simple thing to deliberate about.
 
@@ -28,7 +28,7 @@ Some naive developer could assume that every user should have a balance, even ze
 
 You may argue that the function could return zero, but this could trick the developer to believe that every user indeed has a valid balance, which we know isn't true. There's also the possibility of raising an exception, but this could lead the programmer to control flow with it [which is an anti-pattern](https://web.archive.org/web/20140430044213/http://c2.com/cgi-bin/wiki?DontUseExceptionsForFlowControl), and further if the language doesn't enforce exception handling we would have the same problem of the clueless possibility of absence.
 
-## But there's an Option
+### But there's an Option
 
 The Rust programming languages solve this issue in a very elegant way: not having a `null` at all. If this sounds dramatic, weird, and scary for you it's ok, I felt that way too. But actually, the language gives you a way better approach to represent absence, it's called the `Option` enum. In Rust, we can code the same function above as following:
 
@@ -59,6 +59,6 @@ calculate_balance(user).expect("I'm a reckless fearless kid"); // panic with a f
 
 You may ask: if the program still can crash or defaults, then what's the difference anyway? The difference here is that you're deliberately choosing to not do anything about it, rather than blindly falling into a trap, so Rust always gives you the information but the decision of what to do about it is in the hands entirely of the developer. I think it's obvious but I feel obliged to say that `expect` and `unwrap` should be avoided when possible and used thoughtfully.
 
-## Conclusion
+### Conclusion
 
 The Rust approach may not be a surprise for a lot of programmers because in fact is a very old concept and implemented natively or with external libraries in [a lot of programming languages](https://en.wikipedia.org/wiki/Option_type#Names_and_definitions). But it's kind of funny to me that something so simple, yet powerful, could avoid an enormous amount of runtime bugs in modern applications. I certainly learned how to write better and safer code with Rust and this will absolutely be reflected at other languages that I'll put my hands on.
