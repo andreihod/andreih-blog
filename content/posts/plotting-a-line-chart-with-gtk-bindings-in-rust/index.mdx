@@ -72,7 +72,7 @@ window.set_default_size(size.0 as i32, size.1 as i32);
 window.add(&drawing_area);
 window.show_all();
 ```
-The `connect_draw` clojure receives the cairo's [Context](https://gtk-rs.org/docs/cairo/struct.Context.html) as parameter (`cr`), that's the variable we'll use to draw the lines and labels, it's pretty much just like any other canvas. So let's set the background, the font and line width.
+The `connect_draw` closure receives the cairo's [Context](https://gtk-rs.org/docs/cairo/struct.Context.html) as parameter (`cr`), that's the variable we'll use to draw the lines and labels, it's pretty much just like any other canvas. So let's set the background, the font and line width.
 
 ```rust
 cr.set_source_rgb(1.0 / 255.0, 46.0 / 255.0, 64.0 / 255.0); // Background color
